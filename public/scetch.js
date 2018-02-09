@@ -12,7 +12,7 @@ function setup(){
 }
 var singleTouch = true;
 $(function() {
-    $('body').on('touchstart', function (e) {
+    $('body').on('touchstart touchmove', function (e) {
         console.log(e.touches.length);
         if (e.touches.length > 1){
             singleTouch = false;
