@@ -10,8 +10,21 @@ function setup(){
     button = createButton('Clear');
     button.mousePressed(clr_emit);
 }
-
+var singleTouch = true;
+$(function() {
+    $('body').on('touchstart', function (e) {
+        console.log(e.touches.length);
+        if (e.touches.length > 1){
+            singleTouch = false;
+            $(this).css("overflow", "auto");
+        }else{
+            singleTouch = true;
+            $(this).css("overflow", "hidden");
+        }
+    });
+});
 function touchMoved(){
+    if(singleTouch){
 	    var mx = mouseX  / width;
 	    var my = mouseY  / height;
         var px = pmouseX / width;
@@ -20,6 +33,7 @@ function touchMoved(){
 	    stroke(my_col.R,my_col.G,my_col.B);
 	    line(mouseX,mouseY,pmouseX,pmouseY);
 	    socket.emit('lines',{pos:pos,col: my_col});
+    }
 }
 
 function clr_emit(){
