@@ -16,10 +16,9 @@ $(function() {
         console.log(e.touches.length);
         if (e.touches.length > 1){
             singleTouch = false;
-            $(this).css("overflow", "auto");
         }else{
             singleTouch = true;
-            $(this).css("overflow", "hidden");
+            e.preventDefault();
         }
     });
 });
