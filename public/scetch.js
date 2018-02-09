@@ -11,8 +11,7 @@ function setup(){
     button.mousePressed(clr_emit);
 }
 
-function draw(){
-    if(mouseIsPressed) {
+function touchMoved(){
 	    var mx = mouseX  / width;
 	    var my = mouseY  / height;
         var px = pmouseX / width;
@@ -21,8 +20,6 @@ function draw(){
 	    stroke(my_col.R,my_col.G,my_col.B);
 	    line(mouseX,mouseY,pmouseX,pmouseY);
 	    socket.emit('lines',{pos:pos,col: my_col});
-    }
-
 }
 
 function clr_emit(){
