@@ -1,3 +1,4 @@
+
 var socket = io();
 var my_col, toggle_b;
 var Esize = 18;
@@ -8,12 +9,14 @@ function setup(){
     my_col = {R: random(255), G: random(255), B:random(255)}
     strokeWeight(8);
     clear_b = createButton('Clear');
-    clear_b.mousePressed(clr_emit); 
+    clear_b.mousePressed(clr_emit);
     toggle_b = createButton('Eraser');
-    toggle_b.mousePressed(toggle); 
+    toggle_b.mousePressed(toggle);
+    socket.emit('start');
 }
 var singleTouch = true;
-var draw = true;
+var draw_t = true;
+
 $(function() {
     $('body').on('touchstart touchmove', function (e) {
         console.log(e.touches.length);
@@ -25,9 +28,10 @@ $(function() {
         }
     });
 });
+
 function touchMoved(){
     if(singleTouch){
-	if(draw){
+	if(draw_t){
 	    var mx = mouseX  / width;
 	    var my = mouseY  / height;
             var px = pmouseX / width;
@@ -39,11 +43,11 @@ function touchMoved(){
 	}else{
 	    var mx = mouseX  / width;
 	    var my = mouseY  / height;
-            var pos = [mx,my];
+        var pos = [mx,my];
 	    noStroke();
 	    fill(61);
 	    ellipse(mouseX,mouseY,50,50);
-	    socket.emit('draw',{type:'erase',pos:pos});
+	    socket.emit('draw',{type:'erase',pos:pos,col: my_col});
 	}
     }
 }
@@ -53,26 +57,26 @@ function clr_emit(){
 }
 
 function toggle(){
-	if(draw){
-		draw = false;
+	if(draw_t){
+		draw_t = false;
 		toggle_b.html('Draw');
 	}else{
-		draw = true;
+		draw_t = true;
 		toggle_b.html('Eraser');
 	}
 }
 
-socket.on('clr',function(){
-    	background(61);
-});
+    socket.on('other_draw', function (data) {
+        if(data.type === 'line'){
+	    	stroke(data.col.R,data.col.G,data.col.B);
+	    	line(data.pos[0]*width,data.pos[1]*height,data.pos[2]*width,data.pos[3]*height);
+	    }else{
+		    noStroke();
+		    fill(61);
+		    ellipse(data.pos[0]*width,data.pos[1]*height,50,50);
+	    }
+    });
+    socket.on('clr',function(){
+            background(61);
+    });
 
-socket.on('other_draw', function (data) {
-	if(data.type == 'line'){
-		stroke(data.col.R,data.col.G,data.col.B);
-		line(data.pos[0]*width,data.pos[1]*height,data.pos[2]*width,data.pos[3]*height);
-	}else if(data.type == 'erase'){
-		noStroke();
-		fill(61);
-		ellipse(data.pos[0]*width,data.pos[1]*height,50,50);
-	}
-});

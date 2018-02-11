@@ -17,16 +17,18 @@ var all = [];
 
 io.on('connection', function(socket) {
 	console.log('connection');
-        all_lines.forEach(function(data){
-        	socket.emit('other_draw',data);
+        socket.on('start', function(){
+            all.forEach(function(e){
+        	    socket.emit('other_draw',e);
+            });
         });
-	socket.on('draw', function(data) {
-        	all.push(data);
-		socket.broadcast.emit('other_draw', data);
-	});
-	socket.on('disconnect', function(){
+	    socket.on('draw', function(data) {
+            all.push(data);
+		    socket.broadcast.emit('other_draw', data);
+	    });
+	    socket.on('disconnect', function(){
     		console.log('user disconnected');
-  	});
+  	    });
     	socket.on('clear',function(){
         	all = [];
         	io.emit('clr');
