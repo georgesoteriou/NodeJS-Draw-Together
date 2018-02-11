@@ -13,23 +13,22 @@ var server = express()
     .listen(port, function() { console.log("Listening on port " + port); });
 
 var io = require('socket.io')(server);
-var all_lines = [];
+var all = [];
 
 io.on('connection', function(socket) {
 	console.log('connection');
-    all_lines.forEach(function(lines){
-        socket.emit('other_lines',lines);
-    });
-	socket.on('lines', function(data) {
-		console.log('lines', data);
-        all_lines.push(data);
-		socket.broadcast.emit('other_lines', data);
+        all_lines.forEach(function(data){
+        	socket.emit('other_draw',data);
+        });
+	socket.on('draw', function(data) {
+        	all.push(data);
+		socket.broadcast.emit('other_draw', data);
 	});
 	socket.on('disconnect', function(){
-    	console.log('user disconnected');
+    		console.log('user disconnected');
   	});
-    socket.on('clear',function(){
-        all_lines = [];
-        io.emit('clr');
-    });
+    	socket.on('clear',function(){
+        	all = [];
+        	io.emit('clr');
+    	});
 });

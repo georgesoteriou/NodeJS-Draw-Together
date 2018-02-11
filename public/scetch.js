@@ -1,16 +1,19 @@
 var socket = io();
-var my_col
+var my_col, toggle_b;
 var Esize = 18;
 
 function setup(){
-	createCanvas(windowWidth-25,windowHeight-25);
-	background(61);
+    createCanvas(windowWidth-25,windowHeight-25);
+    background(61);
     my_col = {R: random(255), G: random(255), B:random(255)}
     strokeWeight(8);
-    button = createButton('Clear');
-    button.mousePressed(clr_emit);
+    clear_b = createButton('Clear');
+    clear_b.mousePressed(clr_emit); 
+    toggle_b = createButton('Eraser');
+    toggle_b.mousePressed(toggle); 
 }
 var singleTouch = true;
+var draw = true;
 $(function() {
     $('body').on('touchstart touchmove', function (e) {
         console.log(e.touches.length);
@@ -24,14 +27,24 @@ $(function() {
 });
 function touchMoved(){
     if(singleTouch){
+	if(draw){
 	    var mx = mouseX  / width;
 	    var my = mouseY  / height;
-        var px = pmouseX / width;
-        var py = pmouseY / height;
-        var pos = [mx,my,px,py];
+            var px = pmouseX / width;
+            var py = pmouseY / height;
+            var pos = [mx,my,px,py];
 	    stroke(my_col.R,my_col.G,my_col.B);
 	    line(mouseX,mouseY,pmouseX,pmouseY);
-	    socket.emit('lines',{pos:pos,col: my_col});
+	    socket.emit('draw',{type:'line',pos:pos,col: my_col});
+	}else{
+	    var mx = mouseX  / width;
+	    var my = mouseY  / height;
+            var pos = [mx,my];
+	    noStroke();
+	    fill(61);
+	    ellipse(mouseX,mouseY,50,50);
+	    socket.emit('draw',{type:'erase',pos:pos});
+	}
     }
 }
 
@@ -39,20 +52,27 @@ function clr_emit(){
     	socket.emit('clear');
 }
 
+function toggle(){
+	if(draw){
+		draw = false;
+		toggle_b.html('Draw');
+	}else{
+		draw = true;
+		toggle_b.html('Eraser');
+	}
+}
+
 socket.on('clr',function(){
     	background(61);
 });
 
-socket.on('other_lines', function (data) {
-	stroke(
-        data.col.R,
-        data.col.G,
-        data.col.B
-    );
-	line(
-        data.pos[0]*width,
-        data.pos[1]*height,
-        data.pos[2]*width,
-        data.pos[3]*height
-    );
+socket.on('other_draw', function (data) {
+	if(data.type == 'line'){
+		stroke(data.col.R,data.col.G,data.col.B);
+		line(data.pos[0]*width,data.pos[1]*height,data.pos[2]*width,data.pos[3]*height);
+	}else if(data.type == 'erase'){
+		noStroke();
+		fill(61);
+		ellipse(data.pos[0]*width,data.pos[1]*height,50,50);
+	}
 });
