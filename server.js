@@ -16,21 +16,60 @@ var io = require('socket.io')(server);
 var all = [];
 
 io.on('connection', function(socket) {
+    var g;
+    var user;
 	console.log('connection');
-        socket.on('start', function(){
-            all.forEach(function(e){
-        	    socket.emit('other_draw',e);
-            });
+    socket.on('init', function(data){
+        maybeg = all.filter(e => e.game == data.game);
+        if (maybeg.length == 0){
+            g = {game:data.game, draw: [], width:data.w, height:data.h, users: []};
+            console.log(g.width,g.height);
+            all.push(g);
+        }else{
+            g = maybeg[0];
+        }
+    });
+
+    socket.on('start', function(data){
+        user = {name:data.name, col:data.col};
+        g.users.push(user);
+        io.emit('userUpdate',{game:g.game, users: g.users});
+        socket.emit('join', {width:g.width,height:g.height});
+        g.draw.forEach(function(e){
+    	    socket.emit('other_draw',e);
         });
-	    socket.on('draw', function(data) {
-            all.push(data);
-		    socket.broadcast.emit('other_draw', data);
-	    });
-	    socket.on('disconnect', function(){
-    		console.log('user disconnected');
-  	    });
-    	socket.on('clear',function(){
-        	all = [];
-        	io.emit('clr');
-    	});
+    });
+
+    socket.on('left',function(data){
+        if(g){
+            g.users = g.users.filter(e => e != user);
+            io.emit('userUpdate',{game:g.game, users: g.users});
+        }
+    });
+
+    socket.on('draw', function(data) {
+        if(all.some(e => e.game == data.game)){
+            g.draw.push(data);
+            socket.broadcast.emit('other_draw', data);
+        }
+    });
+
+    socket.on('disconnect', function(){
+		console.log('user disconnected');
+        if(g){
+            g.users = g.users.filter(e => e != user);
+            io.emit('userUpdate',{game:g.game, users: g.users});
+        }
+	});
+
+	socket.on('clear',function(data){
+        if(all.some(e => e.game == data.game)){
+        	g.draw = [];
+        	io.emit('clr',data);
+        }
+	});
+
+    socket.on('clearall',function(){
+        all = [];
+    });
 });
