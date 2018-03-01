@@ -92,6 +92,8 @@ var s = function( p ) {
     p.makebuttons = function(){
         clear_b = p.createButton('Clear');
         toggle_b = p.createButton('Eraser');
+        clear_b.parent('header');
+        toggle_b.parent('header');
         clear_b.mousePressed(clr_emit);
         toggle_b.mousePressed(toggle);
     }

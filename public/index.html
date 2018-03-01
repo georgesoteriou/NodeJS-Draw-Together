@@ -5,6 +5,7 @@
 	body{
 		margin:0px;
 		overflow-y: hidden;
+		
 	}
 	#users{
 		position: absolute;
@@ -14,12 +15,14 @@
 		height: auto;
 		padding: 10;
 		font-weight: bold;	
-		color: white;
-		font-size: 1.3em;
+		color: gray;
+		font-size: 1.4em;
+		user-select: none;
+	}
+	#header{
+		top:0;
 	}
 	</style>
-
-	
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript" src="/node_modules/socket.io-client/dist/socket.io.js"></script>
 	<script type="text/javascript" src="/node_modules/p5/lib/p5.js"></script>
@@ -27,9 +30,11 @@
 	<script type="text/javascript" src="scetch.js"></script>
 </head>
 <body>
-	Game:<input type="text" name="Enter World Name Here" id = "game">
-	Your Name:<input type="text" name="Enter World Name Here" id = "name">
-	<button onclick="play()">Connect</button>
+	<div id="header">
+		Game:<input type="text" name="Enter World Name Here" id = "game">
+		Your Name:<input type="text" name="Enter World Name Here" id = "name">
+		<button onclick="play()">Connect</button>
+	</div>
 	<div id='users'>
 	</div>
 </body>
