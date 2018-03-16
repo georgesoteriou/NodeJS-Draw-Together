@@ -11,6 +11,7 @@ $(function() {
         var Esize = 18;
 
         p.setup = function() {
+            pixelDensity(1);
             my_col = {R: p.random(255), G: p.random(255), B:p.random(255)};
             socket.emit('start', {name: n, col:my_col});
         }
@@ -152,6 +153,9 @@ $(function() {
                 }else{
                     myp5 = new p5(s);
                     myp5.makebuttons();
+                    $('canvas').show();
+                    $('#header').show();
+                    $('#users').show(); 
                 }
                 $('.title-screen').hide();
             }
