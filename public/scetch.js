@@ -11,7 +11,7 @@ $(function() {
         var Esize = 18;
 
         p.setup = function() {
-            pixelDensity(1);
+            p.pixelDensity(1);
             my_col = {R: p.random(255), G: p.random(255), B:p.random(255)};
             socket.emit('start', {name: n, col:my_col});
         }
