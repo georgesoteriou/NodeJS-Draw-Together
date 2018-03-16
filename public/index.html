@@ -2,40 +2,72 @@
 <head>
 	<title>Test Node</title>
 	<style>
-	body{
-		margin:0px;
-		overflow-y: hidden;
-		
-	}
-	#users{
-		position: absolute;
-		top: 10;
-		right: 20;
-		width: auto;
-		height: auto;
-		padding: 10;
-		font-weight: bold;	
-		color: gray;
-		font-size: 1.4em;
-		user-select: none;
-	}
-	#header{
-		top:0;
-	}
+		.title-screen{
+			position: absolute;
+			margin: auto;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			width: 400px;
+			height: 200px;
+			background-color: lightblue;
+			border-radius: 3px;
+			padding: 20px;
+		}
+		input{
+			width: 100%;
+		}
+		#header{
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		#users{
+			position: absolute;
+			top: 0;
+			right: 0;
+			font-size: 2em;
+			font-weight: 2;
+			color: white;
+		}
 	</style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript" src="/node_modules/socket.io-client/dist/socket.io.js"></script>
 	<script type="text/javascript" src="/node_modules/p5/lib/p5.js"></script>
-	<script type="text/javascript" src="/node_modules/p5/lib/addons/p5.dom.js"></script>	
+	<script type="text/javascript" src="/node_modules/p5/lib/addons/p5.dom.js"></script>
+	<script type="text/javascript" src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="scetch.js"></script>
+	<link rel="stylesheet" type="text/css" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
 </head>
 <body>
-	<div id="header">
-		Game:<input type="text" name="Enter World Name Here" id = "game">
-		Your Name:<input type="text" name="Enter World Name Here" id = "name">
-		<button onclick="play()">Connect</button>
+	<div class="title-screen">
+		<dic class = "row">
+			<div class="col-3">
+				Name: 
+			</div>
+			<div class="col-9">
+				<input type="text" name="Enter World Name Here" id = "name">
+			</div>
+		</dic>
+		<br>
+		<dic class = "row">
+			<div class="col-3">
+				Game: 
+			</div>
+			<div class="col-9">
+				<input type="text" list="openGames" name="Enter World Name Here" id = "game">
+				<datalist id="openGames">
+				</datalist>
+			</div>
+		</dic>
+		<br>
+		<div class="row justify-content-center">
+			<button class = "col-8 col play">Connect</button>
+    	</div>
 	</div>
-	<div id='users'>
-	</div>
+
+	<div id="header"></div>
+	<div id='users'></div>
 </body>
 </html>
